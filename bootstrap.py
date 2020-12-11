@@ -6,7 +6,7 @@ from Ventana import Ventana
 DATA = pd.read_csv('muertos.csv')# importando data
 EDAD = DATA['EDAD']# seleccionamos la columna
 mediasMuestras = [ ] #vector
-
+#DesEstandar = statistics.stdev(EDAD) # Desviacion estandar de la muestra inicial
 for i in range(5000):
 
    Muestra = EDAD.sample(89, replace =  True)# Muestras aleatorias con reemplazo
@@ -20,25 +20,17 @@ plt.xlabel('Edades ')
 plt.ylabel('Numero de Fallecidos')
 plt.show()
 # intervalo de confianza al 95%
-DesEstandar = statistics.stdev(EDAD) # Desviacion estandar de la muestra inicial
-
 Media = statistics.mean(EDAD) # Media de la muestra Incial
-
 EstandarError = statistics.stdev(mediasMuestras) # error estandar de la muestra inicial
-
 # limites para la precisión si la estimación de la muestra coincide con el valor de toda la población
-
 limInferior = Media-2*EstandarError
 limSuperior = Media+2*EstandarError
-
-
-print("limite inferior",round(limInferior,0),"limite superior",round(limSuperior,0))
+# conversion de mediasMuestra a pandas para calcular los cuantiles
 test = pd.Series(mediasMuestras)
 # cuantiles para el intervalo por percentiles
 p1 = test.quantile(0.025)
 p2 = test.quantile(0.975)
-
+# visualizacion de loss datos en una ventana
 ventana =Ventana(str(p1.round(2)),str(p2.round(2)),round(limInferior,2),round(limSuperior,2))
-
+#grafica de densidad
 pd.DataFrame(mediasMuestras, columns=['Edades']).plot(kind='density',grid = True, title = "Grafica de densidad" ) # grafica de densidad
-print(type(DATA))
